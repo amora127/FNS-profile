@@ -1,0 +1,2848 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>Federation of North States // Atlas Interface</title>
+    <style>
+        :root {
+          --bg: #030507;
+          --bg2: #0a0d12;
+          --glass: rgba(255, 255, 255, 0.08);
+          --glass-2: rgba(255, 255, 255, 0.035);
+          --line: rgba(255, 255, 255, 0.12);
+          --line-strong: rgba(255, 255, 255, 0.22);
+          --cyan: #cfd8e6;
+          --cyan2: #f4f7fb;
+          --text: #f7fbff;
+          --soft: #9ca7b5;
+          --gold: #f4cf7c;
+          --danger: #ff5d81;
+          --shadow:
+            0 28px 100px rgba(0, 0, 0, 0.5),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+          --safe-top: env(safe-area-inset-top, 0px);
+          --safe-right: env(safe-area-inset-right, 0px);
+          --safe-bottom: env(safe-area-inset-bottom, 0px);
+          --safe-left: env(safe-area-inset-left, 0px);
+        }
+
+        * {
+          box-sizing: border-box;
+          -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+          scroll-behavior: smooth;
+        }
+
+        body {
+          margin: 0;
+          font-family: Inter, Segoe UI, Roboto, Arial, sans-serif;
+          color: var(--text);
+          background:
+            radial-gradient(
+              circle at 12% 12%,
+              rgba(255, 255, 255, 0.12),
+              transparent 22%
+            ),
+            radial-gradient(
+              circle at 82% 18%,
+              rgba(255, 255, 255, 0.07),
+              transparent 20%
+            ),
+            radial-gradient(
+              circle at 50% 120%,
+              rgba(255, 255, 255, 0.05),
+              transparent 34%
+            ),
+            linear-gradient(
+              180deg,
+              #020304 0%,
+              #07090d 28%,
+              #05070b 62%,
+              #020304 100%
+            );
+          min-height: 100vh;
+          overflow-x: hidden;
+          padding-left: var(--safe-left);
+          padding-right: var(--safe-right);
+        }
+
+        body::before,
+        body::after {
+          content: "";
+          position: fixed;
+          inset: 0;
+          pointer-events: none;
+          z-index: 0;
+        }
+
+        body::before {
+          background-image:
+            linear-gradient(rgba(122, 223, 255, 0.028) 1px, transparent 1px),
+            linear-gradient(
+              90deg,
+              rgba(122, 223, 255, 0.028) 1px,
+              transparent 1px
+            );
+          background-size: 38px 38px;
+          mask-image: radial-gradient(
+            circle at center,
+            black 30%,
+            transparent 88%
+          );
+        }
+
+        body::after {
+          background:
+            radial-gradient(
+              circle at 20% 10%,
+              rgba(255, 255, 255, 0.08),
+              transparent 16%
+            ),
+            radial-gradient(
+              circle at 78% 24%,
+              rgba(122, 223, 255, 0.08),
+              transparent 18%
+            );
+          filter: blur(26px);
+          opacity: 0.7;
+        }
+
+        .page {
+          position: relative;
+          z-index: 1;
+          width: min(1540px, calc(100% - 24px));
+          margin: 0 auto;
+          padding: calc(16px + var(--safe-top)) 0 calc(42px + var(--safe-bottom));
+        }
+
+        .glass {
+          position: relative;
+          background:
+            linear-gradient(
+              180deg,
+              rgba(210, 230, 255, 0.1),
+              rgba(255, 255, 255, 0.03)
+            ),
+            rgba(8, 17, 29, 0.42);
+          border: 1px solid var(--line);
+          border-radius: 30px;
+          box-shadow: var(--shadow);
+          backdrop-filter: blur(22px) saturate(155%);
+          -webkit-backdrop-filter: blur(22px) saturate(155%);
+          overflow: hidden;
+          isolation: isolate;
+          transform: translateZ(0);
+          transition:
+            transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1),
+            border-color 0.45s ease,
+            box-shadow 0.45s ease,
+            background 0.45s ease;
+        }
+
+        .glass::before {
+          content: "";
+          position: absolute;
+          inset: -40% -20% auto;
+          height: 65%;
+          background: radial-gradient(
+            circle,
+            rgba(255, 255, 255, 0.2),
+            transparent 54%
+          );
+          opacity: 0.16;
+          pointer-events: none;
+          transform: translateX(-20%);
+          animation: shimmer 8s linear infinite;
+        }
+
+        .glass::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.08),
+            transparent 22%,
+            transparent 74%,
+            rgba(114, 217, 255, 0.05)
+          );
+          pointer-events: none;
+          .glass:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow:
+              0 32px 110px rgba(0, 0, 0, 0.52),
+              inset 0 1px 0 rgba(255, 255, 255, 0.12),
+              0 0 0 1px rgba(255, 255, 255, 0.03);
+          }
+          .sweep-glass {
+            position: relative;
+            overflow: hidden;
+          }
+
+          .sweep-glass::before {
+            content: "";
+            position: absolute;
+            inset: -30% auto -30% -18%;
+            width: 34%;
+            z-index: 1;
+            pointer-events: none;
+            background: linear-gradient(
+              115deg,
+              transparent 0%,
+              rgba(255, 255, 255, 0.02) 18%,
+              rgba(255, 255, 255, 0.16) 34%,
+              rgba(255, 255, 255, 0.26) 48%,
+              rgba(255, 255, 255, 0.08) 62%,
+              transparent 82%
+            );
+            filter: blur(10px);
+            transform: translateX(-160%) skewX(-18deg);
+            animation: glassSweep 7.5s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+            mix-blend-mode: screen;
+          }
+
+          .sweep-glass::after {
+            z-index: 0;
+          }
+
+          .topbar > *,
+          .map-shell > * {
+            position: relative;
+            z-index: 2;
+          }
+
+          .map-sweep-shell::before {
+            width: 28%;
+            opacity: 0.95;
+            animation-duration: 9s;
+            animation-delay: 1.2s;
+          }
+
+          @keyframes glassSweep {
+            0% {
+              transform: translateX(-170%) skewX(-18deg);
+              opacity: 0;
+            }
+            8% {
+              opacity: 0.9;
+            }
+            34% {
+              opacity: 0.95;
+            }
+            55% {
+              opacity: 0.35;
+            }
+            100% {
+              transform: translateX(430%) skewX(-18deg);
+              opacity: 0;
+            }
+          }
+
+          .glass.soft-float {
+            animation: floatGlass 7s ease-in-out infinite;
+          }
+        }
+
+        @keyframes shimmer {
+          0% {
+            transform: translateX(-30%) translateY(0) rotate(0deg);
+          }
+          50% {
+            transform: translateX(10%) translateY(2%) rotate(4deg);
+          }
+          100% {
+            transform: translateX(50%) translateY(0) rotate(0deg);
+          }
+        }
+
+        @keyframes introFadeUp {
+          0% {
+            opacity: 0;
+            transform: translateY(28px) scale(0.985);
+            filter: blur(10px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            filter: blur(0);
+          }
+        }
+
+        @keyframes heroTitleRise {
+          0% {
+            opacity: 0;
+            transform: translateY(26px) scale(0.96);
+            letter-spacing: -0.02em;
+            filter: blur(10px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            letter-spacing: 0;
+            filter: blur(0);
+          }
+        }
+
+        @keyframes heroSubFade {
+          0% {
+            opacity: 0;
+            transform: translateY(16px);
+            filter: blur(6px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+            filter: blur(0);
+          }
+        }
+
+        @keyframes flagGlowPulse {
+          0%,
+          100% {
+            transform: translateY(0) scale(1);
+            box-shadow:
+              0 18px 40px rgba(0, 0, 0, 0.28),
+              0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+              0 0 18px rgba(255, 255, 255, 0.08);
+          }
+          50% {
+            transform: translateY(-2px) scale(1.025);
+            box-shadow:
+              0 22px 50px rgba(0, 0, 0, 0.34),
+              0 0 0 1px rgba(255, 255, 255, 0.12) inset,
+              0 0 30px rgba(255, 255, 255, 0.18),
+              0 0 60px rgba(180, 210, 255, 0.1);
+          }
+        }
+
+        @keyframes flagSweep {
+          0% {
+            transform: translateX(-140%) skewX(-16deg);
+            opacity: 0;
+          }
+          20% {
+            opacity: 0.7;
+          }
+          60% {
+            opacity: 0.35;
+          }
+          100% {
+            transform: translateX(220%) skewX(-16deg);
+            opacity: 0;
+          }
+        }
+
+        @keyframes statRise {
+          0% {
+            opacity: 0;
+            transform: translateY(22px) scale(0.97);
+            filter: blur(8px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            filter: blur(0);
+          }
+        }
+
+        @keyframes floatGlass {
+          0%,
+          100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-4px);
+          }
+        }
+
+        .reveal {
+          opacity: 0;
+          transform: translateY(30px) scale(0.985);
+          filter: blur(10px);
+          transition:
+            opacity 0.75s cubic-bezier(0.2, 0.8, 0.2, 1),
+            transform 0.75s cubic-bezier(0.2, 0.8, 0.2, 1),
+            filter 0.75s cubic-bezier(0.2, 0.8, 0.2, 1);
+          will-change: transform, opacity, filter;
+        }
+
+        .reveal.in-view {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+          filter: blur(0);
+        }
+
+        .intro-hero {
+          animation: introFadeUp 1s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        }
+
+        .layout {
+          display: grid;
+          grid-template-columns: 320px minmax(0, 1fr) 360px;
+          gap: 16px;
+          align-items: start;
+        }
+
+        .left,
+        .right {
+          display: grid;
+          gap: 16px;
+          align-content: start;
+          position: sticky;
+          top: calc(16px + var(--safe-top));
+        }
+
+        .panel,
+        .info-card,
+        .story-card,
+        .brand {
+          padding: 18px;
+        }
+
+        .tiny {
+          font-size: 11px;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+        }
+
+        .muted {
+          color: rgba(238, 248, 255, 0.64);
+        }
+
+        .section-title {
+          font-size: 12px;
+          letter-spacing: 0.24em;
+          text-transform: uppercase;
+          color: var(--cyan);
+          margin-bottom: 10px;
+        }
+
+        .headline {
+          font-size: clamp(28px, 3.4vw, 34px);
+          font-weight: 800;
+          line-height: 1.02;
+          margin: 10px 0 4px;
+          color: #ffffff;
+          text-shadow:
+            0 2px 10px rgba(0, 0, 0, 0.28),
+            0 0 18px rgba(255, 255, 255, 0.08);
+          animation: heroTitleRise 1s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+          animation-delay: 0.08s;
+        }
+
+        .sub {
+          font-size: 13px;
+          line-height: 1.72;
+          color: rgba(247, 251, 255, 0.72);
+          text-shadow: 0 1px 8px rgba(0, 0, 0, 0.16);
+          animation: heroSubFade 1s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+          animation-delay: 0.28s;
+        }
+
+        .brand {
+          display: grid;
+          gap: 14px;
+        }
+
+        .brand-badge,
+        .hud-tag,
+        .pill,
+        .chip,
+        .timeline-year {
+          backdrop-filter: blur(14px) saturate(160%);
+          -webkit-backdrop-filter: blur(14px) saturate(160%);
+        }
+
+        .brand-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          width: max-content;
+          border: 1px solid var(--line);
+          background: rgba(255, 255, 255, 0.05);
+          border-radius: 999px;
+          padding: 9px 13px;
+          font-size: 11px;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.08),
+            0 10px 24px rgba(0, 0, 0, 0.18);
+          animation: heroSubFade 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+          animation-delay: 0s;
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.1),
+            0 10px 24px rgba(0, 0, 0, 0.18),
+            0 0 18px rgba(255, 255, 255, 0.04);
+        }
+
+        .brand-top {
+          display: flex;
+          align-items: start;
+          justify-content: space-between;
+          gap: 12px;
+        }
+
+        .flag-card {
+          position: relative;
+          width: 92px;
+          min-width: 92px;
+          height: 62px;
+          flex: 0 0 92px;
+          align-self: flex-start;
+          border-radius: 22px;
+          overflow: hidden;
+          border: 1px solid rgba(255, 255, 255, 0.16);
+          background:
+            linear-gradient(
+              180deg,
+              rgba(255, 255, 255, 0.12),
+              rgba(255, 255, 255, 0.03)
+            ),
+            rgba(255, 255, 255, 0.04);
+          box-shadow:
+            0 18px 40px rgba(0, 0, 0, 0.28),
+            0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+            0 0 18px rgba(255, 255, 255, 0.08);
+          animation: flagGlowPulse 4.2s ease-in-out infinite;
+        }
+
+        .flag-card img {
+          display: block;
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+          object-position: center;
+          padding: 8px;
+          background: linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.1),
+            rgba(255, 255, 255, 0.02)
+          );
+          filter:
+            saturate(1.08)
+            brightness(1.02)
+            drop-shadow(0 0 10px rgba(255, 255, 255, 0.1));
+        }
+
+        .flag-card::before {
+          content: "";
+          position: absolute;
+          inset: -20% auto -20% -30%;
+          width: 42%;
+          pointer-events: none;
+          background: linear-gradient(
+            115deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.06) 20%,
+            rgba(255, 255, 255, 0.28) 48%,
+            rgba(255, 255, 255, 0.08) 65%,
+            transparent 100%
+          );
+          filter: blur(8px);
+          transform: translateX(-140%) skewX(-16deg);
+          animation: flagSweep 4.8s linear infinite;
+        }
+
+        .flag-card::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          border-radius: inherit;
+          pointer-events: none;
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.18),
+            inset 0 -16px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        .title-sub {
+          font-size: 14px;
+          color: var(--soft);
+        }
+
+        .stats,
+        .info-grid,
+        .district-detail-grid,
+        .quick-facts {
+          display: grid;
+          gap: 10px;
+        }
+
+        .stats,
+        .info-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+
+        .stat,
+        .metric,
+        .status-box,
+        .detail-card,
+        .timeline-item,
+        .district {
+          position: relative;
+          border-radius: 20px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          background: linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.06),
+            rgba(255, 255, 255, 0.03)
+          );
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.06),
+            0 16px 34px rgba(0, 0, 0, 0.16);
+          backdrop-filter: blur(16px) saturate(140%);
+          -webkit-backdrop-filter: blur(16px) saturate(140%);
+        }
+
+        .stat,
+        .metric,
+        .status-box,
+        .detail-card {
+          padding: 13px;
+        }
+
+        .stat b,
+        .metric .v,
+        .status-box b {
+          display: block;
+          margin-top: 6px;
+          font-size: 18px;
+          font-weight: 700;
+          color: #ffffff;
+          text-shadow:
+            0 1px 8px rgba(0, 0, 0, 0.2),
+            0 0 12px rgba(255, 255, 255, 0.06);
+        }
+
+        .brand .stats .stat {
+          opacity: 0;
+          transform: translateY(20px) scale(0.98);
+          filter: blur(8px);
+          animation: statRise 0.75s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        .brand .stats .stat:nth-child(1) {
+          animation-delay: 0.32s;
+        }
+
+        .brand .stats .stat:nth-child(2) {
+          animation-delay: 0.42s;
+        }
+
+        .brand .stats .stat:nth-child(3) {
+          animation-delay: 0.52s;
+        }
+
+        .brand .stats .stat:nth-child(4) {
+          animation-delay: 0.62s;
+        }
+
+        .brand .stats .stat:hover {
+          transform: translateY(-3px) scale(1.01);
+          border-color: rgba(255, 255, 255, 0.18);
+          box-shadow:
+            0 20px 40px rgba(0, 0, 0, 0.22),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1),
+            0 0 20px rgba(255, 255, 255, 0.05);
+        }
+
+        .metric .k,
+        .status-box span {
+          font-size: 11px;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          color: rgba(238, 247, 255, 0.46);
+        }
+
+        .districts {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 10px;
+        }
+
+        .panel .districts {
+          max-height: 520px;
+          overflow: auto;
+          padding-right: 4px;
+        }
+
+        .panel .districts::-webkit-scrollbar {
+          width: 8px;
+        }
+
+        .panel .districts::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.12);
+          border-radius: 999px;
+        }
+
+        .panel .districts::-webkit-scrollbar-track {
+          background: transparent;
+        }
+
+        .district {
+          width: 100%;
+          text-align: left;
+          padding: 12px 12px;
+          min-height: 86px;
+          color: var(--text);
+          cursor: pointer;
+          transition:
+            transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1),
+            border-color 0.28s ease,
+            background 0.28s ease,
+            box-shadow 0.28s ease;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+        }
+
+        .district strong {
+          display: block;
+          font-size: 13px;
+          margin-bottom: 4px;
+          line-height: 1.2;
+        }
+
+        .district span {
+          font-size: 11px;
+          color: rgba(238, 247, 255, 0.58);
+          line-height: 1.4;
+        }
+
+        .district:hover,
+        .district.active {
+          transform: translateY(-2px);
+          border-color: rgba(122, 223, 255, 0.34);
+          background: linear-gradient(
+            180deg,
+            rgba(122, 223, 255, 0.1),
+            rgba(255, 255, 255, 0.04)
+          );
+          box-shadow:
+            0 0 0 1px rgba(122, 223, 255, 0.14) inset,
+            0 20px 36px rgba(27, 136, 199, 0.12);
+        }
+
+        .district strong {
+          display: block;
+          font-size: 14px;
+          margin-bottom: 5px;
+        }
+
+        .district span {
+          font-size: 12px;
+          color: rgba(238, 247, 255, 0.62);
+        }
+
+        .center {
+          display: grid;
+          gap: 16px;
+          min-width: 0;
+        }
+
+        .topbar {
+          padding: 16px 18px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 14px;
+        }
+
+        .mode-pills {
+          display: flex;
+          gap: 8px;
+          flex-wrap: wrap;
+        }
+
+        .pill {
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          background: rgba(255, 255, 255, 0.05);
+          color: var(--text);
+          border-radius: 999px;
+          padding: 10px 14px;
+          font-size: 12px;
+          cursor: pointer;
+          transition: 0.2s ease;
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        }
+
+        .pill.active,
+        .pill:hover {
+          background: linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.14),
+            rgba(255, 255, 255, 0.06)
+          );
+          border-color: rgba(255, 255, 255, 0.24);
+          box-shadow:
+            0 12px 24px rgba(255, 255, 255, 0.06),
+            inset 0 1px 0 rgba(255, 255, 255, 0.14);
+        }
+
+        .map-shell {
+          padding: 12px;
+        }
+
+        .map-wrap {
+          position: relative;
+          border-radius: 28px;
+          overflow: hidden;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          background:
+            radial-gradient(
+              circle at center,
+              rgba(114, 217, 255, 0.11),
+              transparent 35%
+            ),
+            linear-gradient(
+              180deg,
+              rgba(255, 255, 255, 0.05),
+              rgba(255, 255, 255, 0.02)
+            );
+          min-height: 0;
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.08),
+            inset 0 -24px 60px rgba(0, 0, 0, 0.24),
+            0 24px 80px rgba(0, 0, 0, 0.3);
+        }
+
+        .map-board {
+          position: relative;
+          width: 100%;
+          aspect-ratio: 1600 / 1067;
+          transform-origin: center center;
+        }
+
+        .map-image,
+        .overlay-svg,
+        .blueprint,
+        .scanlines,
+        .vignette {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+        }
+
+        .map-image {
+          object-fit: contain;
+          display: block;
+          filter: contrast(1.04) saturate(1.05) brightness(0.98);
+          pointer-events: none;
+        }
+
+        .overlay-svg,
+        .blueprint,
+        .scanlines,
+        .vignette {
+          pointer-events: none;
+          .map-wrap::before {
+            content: "";
+            position: absolute;
+            inset: 14px;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow:
+              inset 0 1px 0 rgba(255, 255, 255, 0.05),
+              0 0 40px rgba(255, 255, 255, 0.04);
+            pointer-events: none;
+            z-index: 2;
+          }
+          .map-sweep-shell .map-wrap::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background:
+              radial-gradient(
+                circle at 20% 18%,
+                rgba(255, 255, 255, 0.08),
+                transparent 18%
+              ),
+              linear-gradient(
+                180deg,
+                rgba(255, 255, 255, 0.04),
+                transparent 22%,
+                transparent 78%,
+                rgba(255, 255, 255, 0.03)
+              );
+            mix-blend-mode: screen;
+            opacity: 0.6;
+          }
+        }
+
+        .blueprint {
+          background:
+            linear-gradient(rgba(114, 217, 255, 0.04) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(114, 217, 255, 0.04) 1px, transparent 1px);
+          background-size: 48px 48px;
+          opacity: 0.16;
+        }
+
+        .scanlines {
+          background:
+            linear-gradient(
+              180deg,
+              rgba(255, 255, 255, 0.04),
+              transparent 8%,
+              transparent 92%,
+              rgba(255, 255, 255, 0.03)
+            ),
+            repeating-linear-gradient(
+              180deg,
+              rgba(114, 217, 255, 0.05) 0 1px,
+              transparent 1px 4px
+            );
+          mix-blend-mode: screen;
+          opacity: 0.12;
+        }
+
+        .vignette {
+          box-shadow:
+            inset 0 0 160px rgba(0, 0, 0, 0.62),
+            inset 0 0 48px rgba(114, 217, 255, 0.09);
+        }
+
+        .hud-tag {
+          position: absolute;
+          z-index: 12;
+          padding: 8px 13px;
+          border-radius: 999px;
+          border: 1px solid rgba(255, 255, 255, 0.14);
+          background: rgba(4, 15, 26, 0.58);
+          font-size: 11px;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+          box-shadow:
+            0 12px 26px rgba(0, 0, 0, 0.22),
+            inset 0 1px 0 rgba(255, 255, 255, 0.07);
+        }
+
+        .hud-tag strong {
+          color: var(--cyan);
+        }
+
+        .route-base {
+          fill: none;
+          stroke: rgba(255, 255, 255, 0.22);
+          stroke-width: 2.5;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+        }
+
+        .route-glow {
+          fill: none;
+          stroke: rgba(114, 217, 255, 0.84);
+          stroke-width: 4.8;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+          filter: drop-shadow(0 0 8px rgba(114, 217, 255, 0.72));
+          stroke-dasharray: 14 14;
+          animation: rail 7s linear infinite;
+        }
+
+        .route-glow.freight {
+          stroke: rgba(255, 204, 102, 0.84);
+          filter: drop-shadow(0 0 8px rgba(255, 204, 102, 0.55));
+        }
+
+        .route-glow.risk {
+          stroke: rgba(255, 93, 122, 0.84);
+          filter: drop-shadow(0 0 8px rgba(255, 93, 122, 0.55));
+        }
+
+        .route-glow.major {
+          stroke: rgba(200, 220, 235, 0.88);
+          filter: drop-shadow(0 0 8px rgba(200, 220, 235, 0.5));
+        }
+
+        .route-glow.residential {
+          stroke: rgba(132, 220, 122, 0.88);
+          filter: drop-shadow(0 0 8px rgba(132, 220, 122, 0.5));
+        }
+
+        @keyframes rail {
+          from {
+            stroke-dashoffset: 0;
+          }
+          to {
+            stroke-dashoffset: -260;
+          }
+        }
+
+        @keyframes barGrow {
+          0% {
+            transform: scaleX(0.05);
+            opacity: 0.5;
+          }
+          100% {
+            transform: scaleX(1);
+            opacity: 1;
+          }
+        }
+
+        @keyframes barShine {
+          0% {
+            transform: translateX(-120%);
+          }
+          100% {
+            transform: translateX(140%);
+          }
+        }
+
+        .glow {
+          opacity: 0.92;
+        }
+
+        .glow circle {
+          filter: blur(22px);
+          animation: pulse 3.6s ease-in-out infinite;
+        }
+
+        .glow .cyan {
+          fill: rgba(114, 217, 255, 0.28);
+        }
+
+        .glow .gold {
+          fill: rgba(255, 206, 111, 0.26);
+        }
+
+        .glow .red {
+          fill: rgba(255, 93, 122, 0.22);
+        }
+
+        @keyframes pulse {
+          0%,
+          100% {
+            opacity: 0.66;
+            transform: scale(1);
+          }
+          50% {
+            opacity: 1;
+            transform: scale(1.04);
+          }
+        }
+
+        @keyframes timelinePulse {
+          0%,
+          100% {
+            transform: scale(1);
+            opacity: 0.9;
+          }
+          50% {
+            transform: scale(1.18);
+            opacity: 1;
+          }
+        }
+
+        @keyframes timelineScan {
+          0% {
+            transform: translateY(0);
+            opacity: 0;
+          }
+          15% {
+            opacity: 1;
+          }
+          85% {
+            opacity: 0.9;
+          }
+          100% {
+            transform: translateY(540px);
+            opacity: 0;
+          }
+        }
+
+        .marker {
+          position: absolute;
+          width: 22px;
+          height: 22px;
+          border-radius: 999px;
+          transform: translate(-50%, -50%);
+          cursor: pointer;
+          z-index: 8;
+          border: 2px solid rgba(255, 255, 255, 0.98);
+          background: radial-gradient(
+            circle at 35% 35%,
+            #fff,
+            #8fe5ff 46%,
+            #159eff 75%
+          );
+          box-shadow:
+            0 0 18px rgba(114, 217, 255, 0.85),
+            0 0 36px rgba(114, 217, 255, 0.25);
+          transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease,
+            opacity 0.2s ease;
+          touch-action: manipulation;
+        }
+
+        .map-hotspot {
+          position: absolute;
+          transform: translate(-50%, -50%);
+          z-index: 6;
+          border-radius: 999px;
+          cursor: pointer;
+          background: radial-gradient(
+            circle,
+            rgba(122, 223, 255, 0.1) 0%,
+            rgba(122, 223, 255, 0.05) 42%,
+            rgba(122, 223, 255, 0.01) 72%,
+            transparent 100%
+          );
+          border: 1px solid rgba(122, 223, 255, 0.1);
+          box-shadow:
+            inset 0 0 0 1px rgba(122, 223, 255, 0.04),
+            0 0 24px rgba(122, 223, 255, 0.06);
+          transition: 0.2s ease;
+        }
+
+        .map-hotspot:hover {
+          background: radial-gradient(
+            circle,
+            rgba(122, 223, 255, 0.18) 0%,
+            rgba(122, 223, 255, 0.09) 42%,
+            rgba(122, 223, 255, 0.02) 72%,
+            transparent 100%
+          );
+          border-color: rgba(122, 223, 255, 0.24);
+          box-shadow:
+            inset 0 0 0 1px rgba(122, 223, 255, 0.08),
+            0 0 30px rgba(122, 223, 255, 0.14);
+        }
+
+        .marker::before,
+        .marker::after {
+          content: "";
+          position: absolute;
+          inset: -9px;
+          border-radius: 999px;
+          border: 1px solid rgba(114, 217, 255, 0.25);
+          animation: ping 2.6s infinite;
+        }
+
+        .marker::after {
+          inset: -17px;
+          animation-delay: 1.1s;
+        }
+
+        .marker.gold {
+          background: radial-gradient(
+            circle at 35% 35%,
+            #fff,
+            #ffe3a0 40%,
+            #ffbf2f 75%
+          );
+          box-shadow:
+            0 0 18px rgba(255, 206, 111, 0.95),
+            0 0 36px rgba(255, 206, 111, 0.28);
+        }
+
+        .marker.red {
+          background: radial-gradient(
+            circle at 35% 35%,
+            #fff,
+            #ff9db1 42%,
+            #ff395f 75%
+          );
+          box-shadow:
+            0 0 18px rgba(255, 93, 122, 0.92),
+            0 0 36px rgba(255, 93, 122, 0.28);
+        }
+
+        .marker.major {
+          background: radial-gradient(
+            circle at 35% 35%,
+            #ffffff,
+            #b9d8f2 42%,
+            #7f9bb3 76%
+          );
+          box-shadow:
+            0 0 18px rgba(185, 216, 242, 0.9),
+            0 0 36px rgba(185, 216, 242, 0.22);
+        }
+
+        .marker.tech {
+          background: radial-gradient(
+            circle at 35% 35%,
+            #ffffff,
+            #8fe5ff 42%,
+            #1aa8ff 76%
+          );
+          box-shadow:
+            0 0 18px rgba(114, 217, 255, 0.95),
+            0 0 36px rgba(114, 217, 255, 0.28);
+        }
+
+        .marker.industrial {
+          background: radial-gradient(
+            circle at 35% 35%,
+            #ffffff,
+            #ffe19a 42%,
+            #d9a21f 76%
+          );
+          box-shadow:
+            0 0 18px rgba(244, 207, 124, 0.92),
+            0 0 36px rgba(244, 207, 124, 0.24);
+        }
+
+        .marker.residential {
+          background: radial-gradient(
+            circle at 35% 35%,
+            #ffffff,
+            #baf7a8 42%,
+            #58bb4f 76%
+          );
+          box-shadow:
+            0 0 18px rgba(130, 220, 120, 0.9),
+            0 0 36px rgba(130, 220, 120, 0.24);
+        }
+
+        .marker.active,
+        .marker:hover {
+          transform: translate(-50%, -50%) scale(1.16);
+        }
+
+        .marker:active {
+          transform: translate(-50%, -50%) scale(0.92);
+          box-shadow:
+            0 0 10px rgba(255, 255, 255, 0.8),
+            0 0 20px rgba(255, 255, 255, 0.25);
+        }
+
+        @keyframes ping {
+          0% {
+            transform: scale(0.84);
+            opacity: 0.85;
+          }
+          100% {
+            transform: scale(1.55);
+            opacity: 0;
+          }
+        }
+
+        .tooltip {
+          position: absolute;
+          z-index: 16;
+          min-width: 250px;
+          max-width: 330px;
+          border-radius: 20px;
+          border: 1px solid rgba(255, 255, 255, 0.14);
+          background: linear-gradient(
+            180deg,
+            rgba(8, 18, 30, 0.94),
+            rgba(5, 12, 20, 0.88)
+          );
+          backdrop-filter: blur(20px) saturate(165%);
+          -webkit-backdrop-filter: blur(20px) saturate(165%);
+          box-shadow:
+            0 24px 60px rgba(0, 0, 0, 0.34),
+            0 0 0 1px rgba(114, 217, 255, 0.08) inset;
+          padding: 14px;
+          pointer-events: none;
+          opacity: 0;
+          transform: translateY(8px) scale(0.98);
+          transition: 0.18s ease;
+        }
+
+        .tooltip.show {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+
+        .tooltip .tt-top {
+          display: flex;
+          justify-content: space-between;
+          gap: 10px;
+          margin-bottom: 8px;
+        }
+
+        .tooltip h4 {
+          margin: 0;
+          font-size: 15px;
+        }
+
+        .chip {
+          font-size: 10px;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          color: var(--cyan);
+          border: 1px solid rgba(114, 217, 255, 0.24);
+          border-radius: 999px;
+          padding: 5px 8px;
+          background: rgba(114, 217, 255, 0.08);
+        }
+
+        .tooltip p {
+          margin: 0 0 10px;
+          font-size: 12px;
+          line-height: 1.55;
+          color: rgba(238, 247, 255, 0.76);
+        }
+
+        .tooltip .tt-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 8px;
+        }
+
+        .tooltip .mini {
+          border-radius: 12px;
+          background: rgba(255, 255, 255, 0.04);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          padding: 8px;
+        }
+
+        .tooltip .mini span {
+          display: block;
+          font-size: 10px;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: rgba(238, 247, 255, 0.48);
+        }
+
+        .tooltip .mini b {
+          display: block;
+          font-size: 14px;
+          margin-top: 6px;
+        }
+
+        .map-controls {
+          position: absolute;
+          right: 14px;
+          top: 14px;
+          z-index: 20;
+          display: grid;
+          gap: 8px;
+        }
+
+        .ctrl {
+          width: 46px;
+          height: 46px;
+          border-radius: 18px;
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          background: rgba(4, 13, 22, 0.74);
+          color: #fff;
+          font-size: 20px;
+          cursor: pointer;
+          backdrop-filter: blur(14px);
+          -webkit-backdrop-filter: blur(14px);
+          box-shadow:
+            0 12px 28px rgba(0, 0, 0, 0.26),
+            inset 0 1px 0 rgba(255, 255, 255, 0.06);
+          transition:
+            transform 0.18s ease,
+            background 0.18s ease;
+        }
+
+        .ctrl:hover,
+        .ctrl:active {
+          background: rgba(114, 217, 255, 0.16);
+          transform: translateY(-1px);
+        }
+
+        .bars {
+          display: grid;
+          gap: 10px;
+          margin-top: 12px;
+        }
+
+        .bar {
+          display: grid;
+          grid-template-columns: 100px 1fr 48px;
+          gap: 10px;
+          align-items: center;
+          font-size: 12px;
+        }
+
+        .bar-track {
+          position: relative;
+          height: 14px;
+          border-radius: 999px;
+          background: linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.08),
+            rgba(255, 255, 255, 0.03)
+          );
+          overflow: hidden;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.06),
+            inset 0 -6px 16px rgba(0, 0, 0, 0.22);
+        }
+
+        .bar-fill {
+          position: relative;
+          height: 100%;
+          border-radius: 999px;
+          background: linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.98),
+            rgba(197, 210, 224, 0.92)
+          );
+          box-shadow:
+            0 0 20px rgba(255, 255, 255, 0.18),
+            inset 0 1px 0 rgba(255, 255, 255, 0.45);
+          transform-origin: left center;
+          animation: barGrow 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        }
+
+        .bar-fill::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          border-radius: inherit;
+          background: linear-gradient(
+            110deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.45) 35%,
+            transparent 70%
+          );
+          transform: translateX(-100%);
+          animation: barShine 3.6s linear infinite;
+        }
+
+        .bar-fill.red {
+          background: linear-gradient(
+            90deg,
+            rgba(255, 76, 109, 0.92),
+            rgba(255, 255, 255, 0.72)
+          );
+        }
+
+        .story-grid {
+          margin-top: 18px;
+          display: grid;
+          gap: 16px;
+        }
+
+        .story-card h3 {
+          margin: 0 0 10px;
+          font-size: clamp(21px, 2.4vw, 26px);
+        }
+
+        .district-detail-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 16px;
+        }
+
+        .detail-card h4 {
+          margin: 0 0 8px;
+          font-size: 16px;
+        }
+
+        .detail-card p,
+        .info-copy {
+          margin: 0;
+          font-size: 14px;
+          line-height: 1.72;
+          color: rgba(238, 247, 255, 0.74);
+        }
+
+        .timeline-card {
+          position: relative;
+          display: grid;
+          gap: 14px;
+          margin-top: 14px;
+        }
+
+        .timeline-card::before {
+          content: "";
+          position: absolute;
+          left: 35px;
+          top: 10px;
+          bottom: 10px;
+          width: 2px;
+          background: linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.34),
+            rgba(255, 255, 255, 0.08),
+            rgba(255, 93, 122, 0.28)
+          );
+          box-shadow: 0 0 18px rgba(255, 255, 255, 0.1);
+        }
+
+        .timeline-card::after {
+          content: "";
+          position: absolute;
+          left: 32px;
+          top: 0;
+          width: 8px;
+          height: 90px;
+          border-radius: 999px;
+          background: linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0),
+            rgba(255, 255, 255, 0.55),
+            rgba(255, 255, 255, 0)
+          );
+          filter: blur(1px);
+          animation: timelineScan 4.5s linear infinite;
+        }
+
+        .timeline-item {
+          display: grid;
+          grid-template-columns: 84px minmax(0, 1fr);
+          gap: 14px;
+          padding: 16px;
+          overflow: visible;
+          opacity: 0;
+          transform: translateY(30px) scale(0.98);
+          filter: blur(8px);
+          transition:
+            opacity 0.75s cubic-bezier(0.2, 0.8, 0.2, 1),
+            transform 0.75s cubic-bezier(0.2, 0.8, 0.2, 1),
+            filter 0.75s cubic-bezier(0.2, 0.8, 0.2, 1),
+            border-color 0.3s ease,
+            box-shadow 0.3s ease,
+            background 0.3s ease;
+        }
+
+        .timeline-item.in-view {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+          filter: blur(0);
+        }
+
+        .timeline-item:hover {
+          border-color: rgba(255, 255, 255, 0.18);
+          background: linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.09),
+            rgba(255, 255, 255, 0.04)
+          );
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.08),
+            0 20px 44px rgba(0, 0, 0, 0.22),
+            0 0 0 1px rgba(255, 255, 255, 0.03);
+        }
+
+        .timeline-item::before {
+          content: "";
+          position: absolute;
+          left: 29px;
+          top: 24px;
+          width: 14px;
+          height: 14px;
+          border-radius: 999px;
+          background: radial-gradient(circle, #fff 0%, #dfe8f3 45%, #9fb3c8 75%);
+          box-shadow:
+            0 0 0 6px rgba(255, 255, 255, 0.08),
+            0 0 22px rgba(255, 255, 255, 0.22);
+          animation: timelinePulse 2.8s ease-in-out infinite;
+        }
+
+        .timeline-item:nth-child(7)::before,
+        .timeline-item:nth-child(8)::before {
+          background: radial-gradient(circle, #fff 0%, #ffd0db 46%, #ff5d81 78%);
+          box-shadow:
+            0 0 0 6px rgba(255, 93, 122, 0.12),
+            0 0 22px rgba(255, 93, 122, 0.38);
+        }
+
+        .timeline-year {
+          align-self: start;
+          width: max-content;
+          border-radius: 999px;
+          border: 1px solid rgba(255, 255, 255, 0.18);
+          padding: 9px 12px;
+          font-size: 12px;
+          font-weight: 800;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          color: #ffffff;
+          text-shadow:
+            0 1px 2px rgba(0, 0, 0, 0.6),
+            0 0 10px rgba(255, 255, 255, 0.25);
+          background: linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.22),
+            rgba(255, 255, 255, 0.06)
+          );
+          box-shadow:
+            0 12px 24px rgba(0, 0, 0, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.18);
+          -webkit-text-stroke: 0.25px rgba(0, 0, 0, 0.35);
+        }
+
+        box-shadow:
+          0 12px 24px rgba(0, 0, 0, 0.16),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease,
+          border-color 0.3s ease,
+          background 0.3s ease;
+      }
+
+      .timeline-item:hover .timeline-year {
+        transform: translateY(-2px) scale(1.03);
+        border-color: rgba(255, 255, 255, 0.24);
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.2),
+          rgba(255, 255, 255, 0.07)
+        );
+        box-shadow:
+          0 14px 28px rgba(0, 0, 0, 0.2),
+          inset 0 1px 0 rgba(255, 255, 255, 0.16),
+          0 0 18px rgba(255, 255, 255, 0.08);
+      }
+
+      .timeline-body strong {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 15px;
+        letter-spacing: 0.01em;
+      }
+
+      .timeline-body p {
+        margin: 0;
+        font-size: 13px;
+        line-height: 1.72;
+        color: rgba(238, 247, 255, 0.68);
+      }
+
+      .timeline-body p {
+        margin: 0;
+        font-size: 13px;
+        line-height: 1.65;
+        color: rgba(238, 247, 255, 0.72);
+      }
+
+      @media (max-width: 1320px) {
+        .layout {
+          grid-template-columns: 300px minmax(0, 1fr);
+        }
+
+        .right {
+          position: static;
+          grid-column: 1 / -1;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 980px) {
+        .page {
+          width: min(100%, calc(100% - 18px));
+          padding-top: calc(10px + var(--safe-top));
+        }
+
+        .layout {
+          grid-template-columns: 1fr;
+        }
+
+        .left,
+        .right {
+          position: static;
+        }
+
+        .right {
+          grid-template-columns: 1fr;
+        }
+
+        .topbar,
+        .brand-top {
+          flex-direction: column;
+          align-items: start;
+        }
+
+        .stats,
+        .info-grid,
+        .district-detail-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .map-controls {
+          right: 10px;
+          top: 10px;
+        }
+
+        .ctrl {
+          width: 42px;
+          height: 42px;
+          border-radius: 16px;
+        }
+
+        .hud-tag {
+          font-size: 10px;
+          letter-spacing: 0.12em;
+          padding: 8px 10px;
+          max-width: calc(100% - 110px);
+        }
+
+        .tooltip {
+          min-width: 220px;
+          max-width: min(280px, calc(100vw - 42px));
+        }
+      }
+
+      @media (max-width: 720px) {
+        .page {
+          width: min(100%, calc(100% - 14px));
+          .districts {
+            grid-template-columns: 1fr;
+          }
+          .brand-top {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: start;
+            gap: 14px;
+          }
+
+          .brand {
+            gap: 16px;
+          }
+
+          .brand .sub {
+            max-width: 28ch;
+          }
+
+          .headline {
+            font-size: 24px;
+            line-height: 0.98;
+            max-width: 7ch;
+          }
+
+          .title-sub {
+            font-size: 12px;
+            line-height: 1.45;
+            max-width: 16ch;
+          }
+
+          .sub {
+            font-size: 12px;
+            line-height: 1.8;
+          }
+
+          .flag-card {
+            width: 108px;
+            min-width: 108px;
+            height: 74px;
+            flex-basis: 108px;
+            margin-top: 2px;
+          }
+        }
+
+        .panel,
+        .info-card,
+        .story-card,
+        .brand,
+        .topbar {
+          padding: 16px;
+        }
+
+        .headline {
+          font-size: 25px;
+        }
+
+        .map-shell {
+          padding: 8px;
+        }
+
+        .map-wrap {
+          border-radius: 24px;
+        }
+
+        .timeline-card::before {
+          left: 24px;
+        }
+
+        .timeline-item {
+          grid-template-columns: 1fr;
+          gap: 10px;
+          padding-left: 42px;
+        }
+
+        .timeline-item::before {
+          left: 18px;
+        }
+
+        .timeline-year {
+          font-size: 11px;
+          padding: 8px 11px;
+        }
+
+        .bar {
+          grid-template-columns: 76px 1fr 38px;
+          font-size: 11px;
+        }
+      }
+
+      @media (max-width: 430px) {
+        .brand-top {
+          grid-template-columns: 1fr;
+        }
+
+        .flag-card {
+          width: 96px;
+          min-width: 96px;
+          height: 66px;
+          justify-self: start;
+        }
+
+        .headline {
+          max-width: none;
+        }
+
+        .title-sub {
+          max-width: none;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation: none !important;
+          transition: none !important;
+          scroll-behavior: auto !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <div class="layout">
+        <aside class="left">
+          <section class="glass brand intro-hero reveal">
+            <div class="brand-badge">Atlas Interface // FNS</div>
+            <div class="brand-top">
+              <div>
+                <div class="headline">Federation of North States</div>
+                <div class="title-sub">
+                  Federal Technocratic Republic · Novaris City
+                </div>
+              </div>
+              <div class="flag-card">
+                <img
+                  src="logofns.jpg"
+                  alt="Bendera Federation of North States"
+                />
+              </div>
+            </div>
+            <p class="sub muted">
+              Negara fiksi yang menjadi latar belakang untuk Alternative
+              Universe <b>ALMOST HUMAN.</b> Federation of North States (FNS)
+              adalah negara federasi maju yang berdiri pada tahun 2061 setelah
+              beberapa wilayah utara bersatu membentuk pemerintahan baru yang
+              berfokus pada inovasi teknologi dan stabilitas ekonomi. Negara ini
+              menggunakan sistem federal semi-presidential republic, di mana
+              Presiden <i>Franklin Hector</i> menjabat sebagai kepala negara dan
+              simbol persatuan nasional, sementara Perdana Menteri
+              <i>Fitzwilliam</i> memimpin pemerintahan sehari-hari serta
+              kebijakan domestik melalui kabinet federal.
+            </p>
+            <div class="stats">
+              <div class="stat">
+                <span class="tiny muted">Capital Metro</span><b>11.8M</b>
+              </div>
+              <div class="stat">
+                <span class="tiny muted">National Population</span><b>68.4M</b>
+              </div>
+              <div class="stat">
+                <span class="tiny muted">Android Integration</span><b>74%</b>
+              </div>
+              <div class="stat">
+                <span class="tiny muted">Case Status</span><b>2074 Active</b>
+              </div>
+            </div>
+          </section>
+
+          <section class="glass panel reveal">
+            <div class="section-title">District access</div>
+            <div class="districts" id="districtList"></div>
+          </section>
+        </aside>
+
+        <main class="center">
+          <section class="glass topbar intro-hero reveal sweep-glass">
+            <div>
+              <div class="tiny muted">Urban Intelligence Map</div>
+              <div style="font-size: 22px; font-weight: 700; margin-top: 4px">
+                Liquid glass atlas · modern mobile friendly HUD
+              </div>
+            </div>
+            <div class="mode-pills">
+              <button class="pill active" data-layer="all">Full Atlas</button>
+              <button class="pill" data-layer="transit">Transit Layer</button>
+              <button class="pill" data-layer="nodes">Node Layer</button>
+              <button class="pill" data-layer="security">Risk Layer</button>
+            </div>
+          </section>
+
+          <section
+            class="glass map-shell intro-hero reveal sweep-glass map-sweep-shell"
+          >
+            <div class="map-wrap" id="mapWrap">
+              <div class="hud-tag" style="left: 14px; top: 14px">
+                Map Status · <strong>Synced to map.png</strong>
+              </div>
+              <div class="hud-tag" style="left: 14px; bottom: 14px">
+                Hover nodes · click district · rail follows land routes
+              </div>
+              <div class="map-controls">
+                <button class="ctrl" id="zoomIn" aria-label="Zoom in">+</button>
+                <button class="ctrl" id="zoomOut" aria-label="Zoom out">
+                  −
+                </button>
+                <button class="ctrl" id="resetView" aria-label="Reset view">
+                  ⟲
+                </button>
+              </div>
+              <div class="tooltip" id="tooltip"></div>
+
+              <div class="map-board" id="mapBoard">
+                <img
+                  class="map-image"
+                  src="map.png"
+                  alt="Federation of North States map"
+                />
+
+                <svg
+                  class="overlay-svg"
+                  viewBox="0 0 1600 1067"
+                  preserveAspectRatio="none"
+                >
+                  <g id="glowLayer" class="glow">
+                    <circle class="gold" cx="843" cy="386" r="70"></circle>
+                    <circle class="cyan" cx="1020" cy="483" r="52"></circle>
+                    <circle class="cyan" cx="777" cy="534" r="48"></circle>
+                    <circle class="cyan" cx="565" cy="658" r="56"></circle>
+                    <circle class="red" cx="994" cy="607" r="88"></circle>
+                    <circle class="red" cx="1175" cy="695" r="60"></circle>
+                    <circle class="cyan" cx="1353" cy="346" r="46"></circle>
+                  </g>
+
+                  <g id="transitLayer">
+                    <path
+                      class="route-base"
+                      d="M 843 386 C 888 412, 932 445, 972 472 C 991 485, 1006 492, 1020 483"
+                    />
+                    <path
+                      class="route-glow"
+                      d="M 843 386 C 888 412, 932 445, 972 472 C 991 485, 1006 492, 1020 483"
+                    />
+
+                    <path
+                      class="route-base"
+                      d="M 843 386 C 824 434, 808 473, 792 507 C 786 520, 782 529, 777 534"
+                    />
+                    <path
+                      class="route-glow"
+                      d="M 843 386 C 824 434, 808 473, 792 507 C 786 520, 782 529, 777 534"
+                    />
+
+                    <path
+                      class="route-base"
+                      d="M 777 534 C 735 563, 688 597, 636 628 C 612 642, 589 651, 565 658"
+                    />
+                    <path
+                      class="route-glow freight"
+                      d="M 777 534 C 735 563, 688 597, 636 628 C 612 642, 589 651, 565 658"
+                    />
+
+                    <path
+                      class="route-base"
+                      d="M 777 534 C 833 549, 892 572, 942 594 C 971 605, 983 608, 994 607"
+                    />
+                    <path
+                      class="route-glow risk"
+                      d="M 777 534 C 833 549, 892 572, 942 594 C 971 605, 983 608, 994 607"
+                    />
+
+                    <path
+                      class="route-base"
+                      d="M 994 607 C 1054 629, 1118 663, 1175 695"
+                    />
+                    <path
+                      class="route-glow risk"
+                      d="M 994 607 C 1054 629, 1118 663, 1175 695"
+                    />
+
+                    <path
+                      class="route-base"
+                      d="M 1020 483 C 1101 444, 1196 396, 1292 355 C 1321 344, 1338 345, 1353 346"
+                    />
+                    <path
+                      class="route-glow major"
+                      d="M 1020 483 C 1101 444, 1196 396, 1292 355 C 1321 344, 1338 345, 1353 346"
+                    />
+                    <path
+                      class="route-base"
+                      d="M 1175 695 C 1188 732, 1212 760, 1260 792 C 1302 820, 1348 828, 1388 826"
+                    />
+                    <path
+                      class="route-glow residential"
+                      d="M 1175 695 C 1188 732, 1212 760, 1260 792 C 1302 820, 1348 828, 1388 826"
+                    />
+                    <path
+                      class="route-base"
+                      d="M 843 386 C 825 340, 810 305, 800 282"
+                    />
+                    <path
+                      class="route-glow"
+                      d="M 843 386 C 825 340, 810 305, 800 282"
+                    />
+                    <path
+                      class="route-base"
+                      d="M 800 282 C 730 260, 650 250, 580 265"
+                    />
+                    <path
+                      class="route-glow major"
+                      d="M 800 282 C 730 260, 650 250, 580 265"
+                    />
+                    <path
+                      class="route-base"
+                      d="M 580 265 C 520 300, 460 360, 400 430"
+                    />
+                    <path
+                      class="route-glow major"
+                      d="M 580 265 C 520 300, 460 360, 400 430"
+                    />
+                    <path
+                      class="route-base"
+                      d="M 800 282 C 860 265, 930 255, 990 260"
+                    />
+                    <path
+                      class="route-glow"
+                      d="M 800 282 C 860 265, 930 255, 990 260"
+                    />
+                    <path
+                      class="route-base"
+                      d="M 1353 346 C 1320 420, 1280 460, 1235 485"
+                    />
+                    <path
+                      class="route-glow major"
+                      d="M 1353 346 C 1320 420, 1280 460, 1235 485"
+                    />
+                  </g>
+                </svg>
+
+                <div
+                  class="marker gold"
+                  data-id="capital"
+                  style="left: 52.7%; top: 36.2%"
+                ></div>
+
+                <div
+                  class="marker tech"
+                  data-id="tech"
+                  style="left: 63.75%; top: 45.27%"
+                ></div>
+                <div
+                  class="marker major"
+                  data-id="port"
+                  style="left: 48.56%; top: 50.05%"
+                ></div>
+                <div
+                  class="marker industrial"
+                  data-id="industrial"
+                  style="left: 35.31%; top: 61.67%"
+                ></div>
+
+                <div
+                  class="marker red"
+                  data-id="old"
+                  style="left: 62.12%; top: 56.89%"
+                ></div>
+                <div
+                  class="marker red"
+                  data-id="wall"
+                  style="left: 73.44%; top: 65.14%"
+                ></div>
+
+                <div
+                  class="marker major"
+                  data-id="eastport"
+                  style="left: 84.56%; top: 32.43%"
+                ></div>
+                <div
+                  class="marker major"
+                  data-id="nordland"
+                  style="left: 30.2%; top: 24.8%"
+                ></div>
+                <div
+                  class="marker major"
+                  data-id="western"
+                  style="left: 24.8%; top: 42.5%"
+                ></div>
+                <div
+                  class="marker major"
+                  data-id="fanidgc"
+                  style="left: 38.6%; top: 35.3%"
+                ></div>
+
+                <div
+                  class="marker tech"
+                  data-id="technocore"
+                  style="left: 57.8%; top: 27.8%"
+                ></div>
+                <div
+                  class="marker tech"
+                  data-id="aurora"
+                  style="left: 72.4%; top: 24.5%"
+                ></div>
+
+                <div
+                  class="marker major"
+                  data-id="eastern"
+                  style="left: 83.2%; top: 46.8%"
+                ></div>
+                <div
+                  class="marker residential"
+                  data-id="autonomous"
+                  style="left: 86.6%; top: 77.6%"
+                ></div>
+
+                <div
+                  class="map-hotspot"
+                  data-id="nordland"
+                  style="left: 30.2%; top: 24.8%; width: 13%; height: 12%"
+                ></div>
+              </div>
+
+              <div class="blueprint"></div>
+              <div class="scanlines"></div>
+              <div class="vignette"></div>
+            </div>
+          </section>
+        </main>
+
+        <aside class="right">
+          <section class="glass info-card reveal">
+            <div class="section-title">Selected node</div>
+            <h3 class="info-title" id="infoTitle">Novaris City</h3>
+            <p class="info-copy" id="infoCopy"></p>
+            <div class="info-grid">
+              <div class="metric">
+                <span class="k">Population</span
+                ><span class="v" id="popValue"></span>
+              </div>
+              <div class="metric">
+                <span class="k">Android Share</span
+                ><span class="v" id="androidValue"></span>
+              </div>
+              <div class="metric">
+                <span class="k">Security</span
+                ><span class="v" id="securityValue"></span>
+              </div>
+              <div class="metric">
+                <span class="k">Risk Index</span
+                ><span class="v" id="riskValue"></span>
+              </div>
+            </div>
+          </section>
+
+          <section class="glass info-card soft-float reveal">
+            <div class="section-title">Sector reliance</div>
+            <div class="bars" id="sectorBars"></div>
+          </section>
+
+          <section class="glass info-card">
+            <div class="section-title">Federation snapshot</div>
+            <div class="quick-facts">
+              <div class="status-box">
+                <span>Government</span><b>Federal Technocracy</b>
+              </div>
+              <div class="status-box">
+                <span>Official Capital</span><b>Novaris City</b>
+              </div>
+              <div class="status-box">
+                <span>Major Port</span><b>Cobolt Port / Eastport</b>
+              </div>
+              <div class="status-box">
+                <span>Primary Concern</span><b>Deviant Escalation</b>
+              </div>
+            </div>
+          </section>
+        </aside>
+      </div>
+
+      <section class="story-grid">
+        <section class="glass story-card reveal">
+          <div class="section-title">District overview</div>
+          <h3>Struktur kota dan fungsi tiap wilayah</h3>
+          <div class="district-detail-grid">
+            <article class="detail-card">
+              <h4>Distrik Pusat</h4>
+              <p>
+                Pusat teknologi dan perusahaan besar. Gedung tinggi dan papan
+                iklan hologram memenuhi kota. Android bekerja hampir di setiap
+                tempat.
+              </p>
+            </article>
+            <article class="detail-card">
+              <h4>Distrik Residensial</h4>
+              <p>
+                Area tempat keluarga manusia tinggal. Banyak rumah memiliki
+                android domestik. Di sini android sering diperlakukan seperti
+                bagian dari keluarga.
+              </p>
+            </article>
+            <article class="detail-card">
+              <h4>Distrik Industri</h4>
+              <p>
+                Tempat android melakukan pekerjaan berat. Konstruksi, pabrik,
+                dan fasilitas energi. Area ini jarang dikunjungi manusia biasa.
+              </p>
+            </article>
+            <article class="detail-card">
+              <h4>Distrik Lama</h4>
+              <p>
+                Bagian kota yang lebih tua dan kurang berkembang. Banyak android
+                rusak atau android bekas ditemukan di sini. Beberapa android
+                deviant sering bersembunyi di area ini.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="glass story-card">
+          <div class="section-title">Timeline Sejarah Android</div>
+          <h3>Eskalasi teknologi hingga krisis deviant</h3>
+          <div class="timeline-card" id="historyTimeline"></div>
+        </section>
+      </section>
+
+      <section class="story-grid">
+        <section class="glass story-card reveal">
+          <div class="section-title">National Profile</div>
+          <h3>Federation of North States sebagai negara modern</h3>
+          <div class="district-detail-grid">
+            <article class="detail-card">
+              <h4>Mata Uang Resmi</h4>
+              <p>
+                <b>Crown</b> adalah mata uang resmi Federation of North States
+                dengan kode <b>CR</b> dan simbol <b>₡R</b>. Sebagian besar
+                transaksi dilakukan secara digital melalui sistem finansial
+                nasional yang terintegrasi dengan identitas biometrik warga,
+                sementara uang fisik masih digunakan untuk transaksi kecil dan
+                wilayah dengan jaringan terbatas.
+              </p>
+            </article>
+            <article class="detail-card">
+              <h4>Pecahan Mata Uang</h4>
+              <p>
+                Uang kertas terdiri dari 5, 10, 20, 50, 100, dan 500 Crown.
+                Sementara koin terdiri dari 1 Crown, 0.50 Crown, dan 0.10 Crown.
+                Sistem ini dirancang untuk mendukung ekonomi digital tanpa
+                sepenuhnya menghapus transaksi fisik.
+              </p>
+            </article>
+            <article class="detail-card">
+              <h4>Nilai Tukar Crown</h4>
+              <p>
+                Karena FNS adalah negara teknologi dengan ekonomi kuat, Crown
+                memiliki nilai relatif stabil: <b>1 Crown ≈ 1.35 USD</b>.
+                Contohnya, kopi di kafe sekitar <b>CR 4</b>, makan restoran
+                sekitar <b>CR 18</b>, sewa apartemen kecil di Novaris City
+                sekitar <b>CR 950</b>, dan android domestik HR-7 sekitar
+                <b>CR 28,000</b>.
+              </p>
+            </article>
+            <article class="detail-card">
+              <h4>Akses Pembelian Android</h4>
+              <p>
+                Android merupakan barang komersial yang dapat dibeli oleh
+                masyarakat umum selama memiliki kemampuan finansial memadai.
+                Kepemilikan android telah menjadi bagian normal dari kehidupan
+                kelas menengah dan atas di FNS, tetapi tetap sulit diakses oleh
+                warga yang hidup tanpa tempat tinggal atau tanpa kestabilan
+                ekonomi.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="glass story-card reveal">
+          <div class="section-title">Security Structure</div>
+          <h3>Struktur keamanan dan investigasi android</h3>
+          <div class="district-detail-grid">
+            <article class="detail-card">
+              <h4>Federal Police of North States (FPNS)</h4>
+              <p>
+                FPNS adalah lembaga kepolisian nasional FNS yang bertugas dalam
+                penegakan hukum, investigasi kriminal, keamanan publik, dan
+                koordinasi dengan kepolisian negara bagian. Dalam era android,
+                FPNS juga memegang peran sentral dalam penanganan ancaman
+                teknologi tingkat tinggi.
+              </p>
+            </article>
+            <article class="detail-card">
+              <h4>Android Investigation (AIN)</h4>
+              <p>
+                <b>Android Investigation</b> atau <b>AIN</b> adalah divisi
+                khusus dalam FPNS yang dibentuk ketika kasus android deviant
+                mulai meningkat. Divisi ini menangani penyelidikan perilaku
+                android yang tidak normal, kejahatan yang melibatkan android,
+                penangkapan android deviant, dan pengamanan teknologi AI
+                berbahaya.
+              </p>
+            </article>
+            <article class="detail-card">
+              <h4>Prosedur Penanganan Deviant</h4>
+              <p>
+                Jika android menunjukkan perilaku menyimpang, unit akan
+                dilaporkan ke AIN, investigator dikirim ke lokasi, android
+                diamankan, lalu dibawa ke fasilitas analisis. Setelah itu unit
+                dapat diperbaiki, direset, atau dimusnahkan bila dianggap
+                berbahaya bagi publik.
+              </p>
+            </article>
+            <article class="detail-card">
+              <h4>Investigator Khusus</h4>
+              <p>
+                Investigator AIN adalah personel manusia yang dilatih khusus
+                untuk memahami sistem android, pola deviasi, dan ancaman
+                android.
+                <b>Sacha Montgomery</b> bekerja sebagai investigator di AIN dan
+                menjadi bagian penting dari respons negara terhadap eskalasi
+                kasus deviant.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="glass story-card reveal">
+          <div class="section-title">Language & Society</div>
+          <h3>Bahasa resmi dan budaya masyarakat FNS</h3>
+          <div class="district-detail-grid">
+            <article class="detail-card">
+              <h4>Bahasa Resmi</h4>
+              <p>
+                Bahasa resmi Federation of North States adalah <b>English</b>.
+                Bahasa ini digunakan dalam pemerintahan, hukum, pendidikan
+                tinggi, militer, dan seluruh sistem teknologi nasional.
+              </p>
+            </article>
+            <article class="detail-card">
+              <h4>Bahasa Umum di Masyarakat</h4>
+              <p>
+                Sebagai negara multikultural, FNS juga memiliki penggunaan luas
+                untuk <b>Spanish</b>, <b>French</b>, <b>Mandarin</b>, dan
+                <b>Korean</b>. Meski demikian, English tetap menjadi bahasa
+                utama dalam dokumen resmi dan komunikasi nasional.
+              </p>
+            </article>
+            <article class="detail-card">
+              <h4>Kehidupan Sehari-hari</h4>
+              <p>
+                Kehidupan masyarakat FNS sangat dipengaruhi oleh teknologi.
+                Android hadir di hampir semua sektor seperti restoran,
+                transportasi, rumah tangga, rumah sakit, dan industri. Banyak
+                keluarga memiliki android domestik untuk membantu aktivitas
+                harian di rumah.
+              </p>
+            </article>
+            <article class="detail-card">
+              <h4>Sikap terhadap Android</h4>
+              <p>
+                Masyarakat FNS terbagi menjadi dua arus besar. Kelompok
+                <b>Pro-Android</b> percaya android dapat berkembang menjadi
+                bentuk kehidupan baru dan pantas diperlakukan lebih manusiawi.
+                Kelompok <b>Anti-Android</b> melihat android sebagai mesin yang
+                berpotensi menjadi ancaman, dan sering mengadakan protes
+                terhadap perusahaan teknologi seperti <b>Helix Dynamics</b>.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="glass story-card reveal">
+          <div class="section-title">Novaris City</div>
+          <h3>Pusat teknologi Federation of North States</h3>
+          <div class="district-detail-grid">
+            <article class="detail-card">
+              <h4>Karakter Kota</h4>
+              <p>
+                Novaris City adalah pusat teknologi Federation of North States,
+                dikenal dengan gedung pencakar langit, papan iklan hologram,
+                kendaraan otomatis, drone pengawas, dan kehadiran android di
+                hampir setiap sudut aktivitas urban.
+              </p>
+            </article>
+            <article class="detail-card">
+              <h4>Distrik Lama dan Risiko Deviant</h4>
+              <p>
+                Di balik citra modernnya, Novaris City juga memiliki distrik
+                lama yang dipenuhi android rusak, unit modifikasi ilegal, dan
+                ketegangan sosial yang tinggi. Banyak kasus android deviant
+                terjadi di area ini, menjadikannya salah satu zona paling rawan
+                di negara tersebut.
+              </p>
+            </article>
+          </div>
+        </section>
+      </section>
+    </div>
+
+    <script>
+      const nodes = {
+        nordland: {
+          title: "Nordland",
+          tag: "Northern Frontier",
+          copy: "Wilayah utara bersuhu ekstrem dengan dominasi pegunungan salju dan infrastruktur terbatas. Nordland penting untuk stasiun pemantauan iklim, radar jarak jauh, dan jalur logistik kutub.",
+          pop: "2.7M",
+          android: "41%",
+          security: "73",
+          risk: "29",
+        },
+        western: {
+          title: "Western Fed States",
+          tag: "Western Region",
+          copy: "Kawasan federal barat yang luas dan kaya sumber daya alam. Area ini menopang pertanian dingin, tambang, serta jalur distribusi darat menuju pusat federasi.",
+          pop: "9.8M",
+          android: "57%",
+          security: "68",
+          risk: "33",
+        },
+        fanidgc: {
+          title: "Fanidgc",
+          tag: "Border City",
+          copy: "Kota perbatasan strategis di jalur transisi antara Nordland dan wilayah barat. Fanidgc berfungsi sebagai simpul perdagangan regional, checkpoint logistik, dan kota transit militer ringan.",
+          pop: "1.9M",
+          android: "49%",
+          security: "76",
+          risk: "27",
+        },
+        technocore: {
+          title: "Technocore Tower",
+          tag: "Core Infrastructure",
+          copy: "Kompleks menara teknologi dan pusat komputasi tingkat tinggi. Berfungsi sebagai hub data nasional, pusat sinkronisasi jaringan android, dan fasilitas riset infrastruktur digital.",
+          pop: "0.8M",
+          android: "97%",
+          security: "92",
+          risk: "21",
+        },
+        aurora: {
+          title: "Aurora Province",
+          tag: "Northern Province",
+          copy: "Provinsi bersalju di timur laut yang dikenal dengan fasilitas energi, observatorium, dan pangkalan riset. Kepadatan penduduk rendah, tetapi nilainya tinggi secara strategis.",
+          pop: "3.4M",
+          android: "52%",
+          security: "81",
+          risk: "24",
+        },
+        eastern: {
+          title: "Eastern Command",
+          tag: "Military Command",
+          copy: "Zona komando timur dengan peran pertahanan, pengawasan pantai, dan koordinasi keamanan lintas wilayah. Banyak instalasi militer dan sistem pemantauan otomatis ditempatkan di sini.",
+          pop: "4.6M",
+          android: "46%",
+          security: "95",
+          risk: "44",
+        },
+        autonomous: {
+          title: "Autonomous Region",
+          tag: "Semi-Independent Zone",
+          copy: "Kepulauan dan wilayah semi-otonom di tenggara. Daerah ini memiliki struktur administratif khusus, pelabuhan lokal, dan aktivitas maritim tinggi dengan pengawasan federal terbatas.",
+          pop: "2.3M",
+          android: "38%",
+          security: "62",
+          risk: "35",
+        },
+        capital: {
+          title: "Novaris City",
+          tag: "Capital",
+          copy: "Ibu kota federal dan pusat administratif utama. Pada peta asli, lokasinya tepat di jantung Central Fed District, menjadi simpul paling penting antara koridor riset, pelabuhan, dan wilayah selatan.",
+          pop: "11.8M",
+          android: "86%",
+          security: "88",
+          risk: "26",
+        },
+        tech: {
+          title: "AI Research Labs",
+          tag: "Research",
+          copy: "Zona pengembangan android dan AI lanjutan di sisi timur-tengah peta. Dihubungkan langsung ke Novaris agar masuk akal sebagai koridor inovasi dan pengawasan negara.",
+          pop: "5.1M",
+          android: "94%",
+          security: "84",
+          risk: "34",
+        },
+        port: {
+          title: "Cobolt Port",
+          tag: "Port",
+          copy: "Pelabuhan besar di bagian selatan-tengah yang menghubungkan pusat negara dengan jalur laut dan wilayah industri. Posisi transit ke sini mengikuti node pelabuhan di map asli.",
+          pop: "4.8M",
+          android: "73%",
+          security: "76",
+          risk: "39",
+        },
+        industrial: {
+          title: "Silverdelta",
+          tag: "Industrial",
+          copy: "Zona industri besar di bagian barat daya peta. Freight rail menuju Silverdelta dibikin sebagai jalur logistik utama dari Cobolt Port dan pusat federal.",
+          pop: "7.9M",
+          android: "95%",
+          security: "72",
+          risk: "48",
+        },
+        old: {
+          title: "Old District",
+          tag: "High Risk",
+          copy: "Old District adalah zona deviant di tenggara-tengah negara. Karena lokasinya di map asli memanjang horizontal, jalur transit ke sini dibuat sebagai cabang risiko dari node pusat, bukan garis aneh ke laut.",
+          pop: "6.6M",
+          android: "58%",
+          security: "67",
+          risk: "91",
+        },
+        wall: {
+          title: "Sentinel Wall",
+          tag: "Containment",
+          copy: "Benteng pengamanan di bagian tenggara dekat jalur pesisir. Secara logika, ia menjadi terminus keamanan dari cabang Old District untuk kontrol deviant dan mobilisasi unit respons.",
+          pop: "1.4M",
+          android: "24%",
+          security: "97",
+          risk: "82",
+        },
+        eastport: {
+          title: "Eastport",
+          tag: "Eastern Port",
+          copy: "Pelabuhan timur di pesisir timur laut. Jalur transit ke sini diarahkan dari AI Research Labs melalui daratan utara-timur, sesuai letaknya pada map asli.",
+          pop: "3.9M",
+          android: "64%",
+          security: "78",
+          risk: "36",
+        },
+      };
+
+      const districts = [
+        ["capital", "Novaris City", "Ibukota federal dan pusat teknologi"],
+        ["tech", "AI Research Labs", "Laboratorium AI dan teknologi android"],
+        ["port", "Cobolt Port", "Pelabuhan utama wilayah pusat"],
+        ["industrial", "Silverdelta", "Zona industri dan freight besar"],
+        ["old", "Old District", "Zona deviant dan kota lama"],
+        ["wall", "Sentinel Wall", "Containment dan keamanan tinggi"],
+        ["eastport", "Eastport", "Pelabuhan timur strategis"],
+        ["nordland", "Nordland", "Wilayah utara bersalju dan frontier"],
+        [
+          "western",
+          "Western Fed States",
+          "Kawasan barat luas dan kaya sumber daya",
+        ],
+        ["fanidgc", "Fanidgc", "Kota perbatasan dan transit regional"],
+        [
+          "technocore",
+          "Technocore Tower",
+          "Menara data dan infrastruktur inti",
+        ],
+        ["aurora", "Aurora Province", "Provinsi timur laut beriklim ekstrem"],
+        ["eastern", "Eastern Command", "Zona komando dan pertahanan timur"],
+        ["autonomous", "Autonomous Region", "Wilayah kepulauan semi-otonom"],
+      ];
+
+      const sectorData = [
+        ["Domestic", 72, false],
+        ["Industry", 95, false],
+        ["Transport", 83, false],
+        ["Medical", 66, false],
+        ["Security", 61, true],
+      ];
+
+      const historyData = [
+        [
+          "2035",
+          "Robot industri mulai digunakan secara luas.",
+          "Otomasi skala besar mulai mengubah pabrik, logistik, dan konstruksi.",
+        ],
+        [
+          "2045",
+          "Android dengan bentuk menyerupai manusia mulai diperkenalkan.",
+          "Desain humanoid dikembangkan untuk interaksi sosial yang lebih natural.",
+        ],
+        [
+          "2052",
+          "Android domestik mulai dijual ke masyarakat.",
+          "Keluarga mulai memakai android untuk rumah tangga, pengasuhan, dan pendampingan.",
+        ],
+        [
+          "2060",
+          "Android menjadi bagian umum dari kehidupan sehari-hari.",
+          "Transportasi, layanan publik, rumah tangga, dan industri sangat bergantung pada android.",
+        ],
+        [
+          "2068",
+          "Sistem pembelajaran emosi mulai dikembangkan.",
+          "Pola respons sosial android dibuat semakin adaptif dan sulit dibedakan dari manusia.",
+        ],
+        [
+          "2070",
+          "Android pertama yang menunjukkan perilaku tidak biasa ditemukan.",
+          "Kasus awal dianggap gangguan, tetapi mulai memicu kekhawatiran sistemik.",
+        ],
+        [
+          "2072",
+          "Divisi investigasi android dibentuk oleh pemerintah. Sacha mulai bekerja sebagai investigator.",
+          "Pemerintah menganggap kasus deviant cukup serius untuk dibentuk unit investigasi khusus.",
+        ],
+        [
+          "2074",
+          "Kasus android deviant mulai meningkat.",
+          "Insiden tak lagi lokal dan mulai menyebar antarwilayah strategis.",
+        ],
+      ];
+
+      const districtList = document.getElementById("districtList");
+      const infoTitle = document.getElementById("infoTitle");
+      const infoCopy = document.getElementById("infoCopy");
+      const popValue = document.getElementById("popValue");
+      const androidValue = document.getElementById("androidValue");
+      const securityValue = document.getElementById("securityValue");
+      const riskValue = document.getElementById("riskValue");
+      const sectorBars = document.getElementById("sectorBars");
+      const historyTimeline = document.getElementById("historyTimeline");
+      const tooltip = document.getElementById("tooltip");
+      const markers = Array.from(document.querySelectorAll(".marker"));
+      const hotspots = Array.from(document.querySelectorAll(".map-hotspot"));
+      const pills = Array.from(document.querySelectorAll(".pill"));
+      const transitLayer = document.getElementById("transitLayer");
+      const glowLayer = document.getElementById("glowLayer");
+      const mapBoard = document.getElementById("mapBoard");
+      const mapWrap = document.getElementById("mapWrap");
+      const zoomIn = document.getElementById("zoomIn");
+      const zoomOut = document.getElementById("zoomOut");
+      const resetView = document.getElementById("resetView");
+
+      districts.forEach(([id, title, sub]) => {
+        const el = document.createElement("button");
+        el.className = "district" + (id === "capital" ? " active" : "");
+        el.innerHTML = `<strong>${title}</strong><span>${sub}</span>`;
+        el.addEventListener("click", () => selectNode(id));
+        districtList.appendChild(el);
+      });
+
+      sectorData.forEach(([name, value, red]) => {
+        const row = document.createElement("div");
+        row.className = "bar";
+        row.innerHTML = `
+        <div>${name}</div>
+        <div class="bar-track"><div class="bar-fill ${red ? "red" : ""}" style="width:${value}%"></div></div>
+        <div>${value}%</div>
+      `;
+        sectorBars.appendChild(row);
+      });
+
+      historyData.forEach(([year, title, copy]) => {
+        const row = document.createElement("div");
+        row.className = "timeline-item";
+        row.innerHTML = `
+        <div class="timeline-year">${year}</div>
+        <div class="timeline-body">
+          <strong>${title}</strong>
+          <p>${copy}</p>
+        </div>
+      `;
+        historyTimeline.appendChild(row);
+      });
+
+      function districtButtons() {
+        return Array.from(document.querySelectorAll(".district"));
+      }
+
+      function selectNode(id) {
+        const data = nodes[id];
+        if (!data) return;
+        infoTitle.textContent = data.title;
+        infoCopy.textContent = data.copy;
+        popValue.textContent = data.pop;
+        androidValue.textContent = data.android;
+        securityValue.textContent = data.security;
+        riskValue.textContent = data.risk;
+        markers.forEach((marker) =>
+          marker.classList.toggle("active", marker.dataset.id === id),
+        );
+        districtButtons().forEach((btn, i) =>
+          btn.classList.toggle("active", districts[i][0] === id),
+        );
+      }
+
+      function showTooltip(id, clientX, clientY) {
+        const data = nodes[id];
+        if (!data) return;
+        tooltip.innerHTML = `
+        <div class="tt-top">
+          <h4>${data.title}</h4>
+          <span class="chip">${data.tag}</span>
+        </div>
+        <p>${data.copy}</p>
+        <div class="tt-grid">
+          <div class="mini"><span>Population</span><b>${data.pop}</b></div>
+          <div class="mini"><span>Android</span><b>${data.android}</b></div>
+          <div class="mini"><span>Security</span><b>${data.security}</b></div>
+          <div class="mini"><span>Risk</span><b>${data.risk}</b></div>
+        </div>
+      `;
+        const rect = mapWrap.getBoundingClientRect();
+        let left = clientX - rect.left + 18;
+        let top = clientY - rect.top - 18;
+        if (left > rect.width - 290) left = rect.width - 300;
+        if (top > rect.height - 195) top = rect.height - 205;
+        if (top < 16) top = 16;
+        tooltip.style.left = `${left}px`;
+        tooltip.style.top = `${top}px`;
+        tooltip.classList.add("show");
+      }
+
+      function hideTooltip() {
+        tooltip.classList.remove("show");
+      }
+
+      markers.forEach((marker) => {
+        marker.addEventListener("click", () => selectNode(marker.dataset.id));
+        marker.addEventListener("mouseenter", (e) =>
+          showTooltip(marker.dataset.id, e.clientX, e.clientY),
+        );
+        marker.addEventListener("mousemove", (e) =>
+          showTooltip(marker.dataset.id, e.clientX, e.clientY),
+        );
+        marker.addEventListener("mouseleave", hideTooltip);
+        marker.addEventListener(
+          "touchstart",
+          (e) => {
+            const touch = e.touches[0];
+            selectNode(marker.dataset.id);
+            showTooltip(marker.dataset.id, touch.clientX, touch.clientY);
+          },
+          { passive: true },
+        );
+      });
+
+      hotspots.forEach((spot) => {
+        spot.addEventListener("click", () => selectNode(spot.dataset.id));
+        spot.addEventListener("mouseenter", (e) =>
+          showTooltip(spot.dataset.id, e.clientX, e.clientY),
+        );
+        spot.addEventListener("mousemove", (e) =>
+          showTooltip(spot.dataset.id, e.clientX, e.clientY),
+        );
+        spot.addEventListener("mouseleave", hideTooltip);
+        spot.addEventListener(
+          "touchstart",
+          (e) => {
+            const touch = e.touches[0];
+            selectNode(spot.dataset.id);
+            showTooltip(spot.dataset.id, touch.clientX, touch.clientY);
+          },
+          { passive: true },
+        );
+      });
+
+      document.addEventListener("touchstart", (e) => {
+        if (!e.target.closest(".marker")) {
+          hideTooltip();
+        }
+      });
+
+      function setLayer(mode) {
+        pills.forEach((pill) =>
+          pill.classList.toggle("active", pill.dataset.layer === mode),
+        );
+        if (mode === "transit") {
+          transitLayer.style.opacity = "1";
+          glowLayer.style.opacity = "0.25";
+          markers.forEach((m) => (m.style.opacity = "0.45"));
+          return;
+        }
+        if (mode === "nodes") {
+          transitLayer.style.opacity = "0.18";
+          glowLayer.style.opacity = "0.55";
+          markers.forEach((m) => (m.style.opacity = "1"));
+          return;
+        }
+        if (mode === "security") {
+          transitLayer.style.opacity = "0.4";
+          glowLayer.style.opacity = "1";
+          markers.forEach(
+            (m) =>
+              (m.style.opacity = m.classList.contains("red") ? "1" : "0.5"),
+          );
+          return;
+        }
+        transitLayer.style.opacity = "1";
+        glowLayer.style.opacity = "0.92";
+        markers.forEach((m) => (m.style.opacity = "1"));
+      }
+
+      pills.forEach((pill) =>
+        pill.addEventListener("click", () => setLayer(pill.dataset.layer)),
+      );
+
+      let scale = 1;
+
+      function applyTransform() {
+        mapBoard.style.transform = `scale(${scale})`;
+      }
+
+      zoomIn.addEventListener("click", () => {
+        scale = Math.min(1.8, scale + 0.12);
+        applyTransform();
+      });
+
+      zoomOut.addEventListener("click", () => {
+        scale = Math.max(1, scale - 0.12);
+        applyTransform();
+      });
+
+      resetView.addEventListener("click", () => {
+        scale = 1;
+        applyTransform();
+      });
+
+      selectNode("capital");
+      setLayer("all");
+
+      const revealEls = Array.from(document.querySelectorAll(".reveal"));
+
+      const revealObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("in-view");
+            } else {
+              entry.target.classList.remove("in-view");
+            }
+          });
+        },
+        {
+          threshold: 0.18,
+          rootMargin: "0px 0px -8% 0px",
+        },
+      );
+
+      revealEls.forEach((el, index) => {
+        el.style.transitionDelay = `${index * 70}ms`;
+        revealObserver.observe(el);
+      });
+
+      const timelineItems = Array.from(
+        document.querySelectorAll(".timeline-item"),
+      );
+
+      const timelineObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("in-view");
+            }
+          });
+        },
+        {
+          threshold: 0.22,
+          rootMargin: "0px 0px -10% 0px",
+        },
+      );
+
+      timelineItems.forEach((item, index) => {
+        item.style.transitionDelay = `${index * 90}ms`;
+        timelineObserver.observe(item);
+      });
+    </script>
+  </body>
+</html>
